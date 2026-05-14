@@ -42,6 +42,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: kafka1234
       MYSQL_DATABASE: pji_kafka
+      MYSQL_CHARSET: utf8mb4
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - mysql_data:/var/lib/mysql
 
