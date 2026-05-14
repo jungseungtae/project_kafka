@@ -1,5 +1,9 @@
 import json
 from confluent_kafka import Consumer, KafkaError
+import sys
+
+# 실행 시 인자로 이름 구분: python consumer.py A
+INSTANCE_NAME = sys.argv[1] if len(sys.argv) > 1 else 'X'
 
 consumer = Consumer({
     'bootstrap.servers': 'localhost:9092',
@@ -22,8 +26,12 @@ try:
             continue
 
         order = json.loads(msg.value().decode('utf-8'))
-        print(f'[수신] {order["store_name"]} | {order["menu"]} | {order["amount"]:,}원 | {order["timestamp"]}')
-
+        print(
+            f'[Consumer-{INSTANCE_NAME}] '
+            f'[P{msg.partition()}|O{msg.offset()}] '
+            f'{order["store_name"]} | {order["menu"]} | {order["amount"]:,}원'
+        )
+      
 except KeyboardInterrupt:
     print('\n종료')
 finally:
